@@ -1,0 +1,281 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+        ></script>
+    </head>
+    <body class="flex items-center justify-center min-h-screen w-full bg-gray-100">
+      <main class="flex flex-row gap-16 justify-center items-center">
+        <div
+          id="ita"
+          class="bg-green-200 rounded-xl px-6 py-4 text-lg font-semibold shadow-md"
+        >
+          italian
+        </div>
+        <div id="options" class="flex flex-col gap-2">
+          <div
+            id="eng_1"
+            class="bg-blue-200 rounded-lg px-4 py-2 text-sm font-medium shadow hover:bg-blue-300 transition"
+          >
+            english 1
+          </div>
+          <div
+            id="eng_2"
+            class="bg-blue-200 rounded-lg px-4 py-2 text-sm font-medium shadow hover:bg-blue-300 transition"
+          >
+            english 2
+          </div>
+          <div
+            id="eng_3"
+            class="bg-blue-200 rounded-lg px-4 py-2 text-sm font-medium shadow hover:bg-blue-300 transition"
+          >
+            english 3
+          </div>
+          <div
+            id="eng_4"
+            class="bg-blue-200 rounded-lg px-4 py-2 text-sm font-medium shadow hover:bg-blue-300 transition"
+          >
+            english 4
+          </div>
+        </div>
+      </main>
+    </body>
+
+    <script>
+        const data = [
+            "testa",
+            "head",
+            "fronte",
+            "forehead",
+            "capelli",
+            "hair",
+            "occhio",
+            "eye",
+            "orecchio",
+            "ear",
+            "naso",
+            "nose",
+            "bocca",
+            "mouth",
+            "lingua",
+            "tongue",
+            "dente",
+            "tooth",
+            "mento",
+            "chin",
+            "guancia",
+            "cheek",
+            "collo",
+            "neck",
+            "spalla",
+            "shoulder",
+            "braccio",
+            "arm",
+            "gomito",
+            "elbow",
+            "mano",
+            "hand",
+            "dito",
+            "finger",
+            "unghia",
+            "nail",
+            "polso",
+            "wrist",
+            "petto",
+            "chest",
+            "schiena",
+            "back",
+            "pancia",
+            "belly",
+            "fianco",
+            "side",
+            "anca",
+            "hip",
+            "gamba",
+            "leg",
+            "ginocchio",
+            "knee",
+            "piede",
+            "foot",
+            "tallone",
+            "heel",
+            "caviglia",
+            "ankle",
+            "cuore",
+            "heart",
+            "pantagruelico",
+            "gargantuan",
+            "sgranchirsi",
+            "to stretch oneself",
+            "sbrodolarsi",
+            "to slobber",
+            "zuppicante",
+            "soaking",
+            "ciabattino",
+            "cobbler",
+            "zuzzurellone",
+            "goofball",
+            "gattabuia",
+            "jail",
+            "accipicchia",
+            "gosh",
+            "blaterare",
+            "to babble",
+            "sfrigolare",
+            "to sizzle",
+            "pappagorgia",
+            "double chin",
+            "cianciare",
+            "to chatter",
+            "sbadigliare",
+            "to yawn",
+            "strabuzzare",
+            "to bulge",
+            "gracchiare",
+            "to caw",
+            "pasticcio",
+            "mess",
+            "trabiccolo",
+            "rickety vehicle",
+            "infradiciare",
+            "to soak",
+            "smargiasso",
+            "braggart",
+            "pernacchia",
+            "raspberry",
+            "cianfrusaglia",
+            "junk",
+            "cicciobombo",
+            "fatty-boom-boom",
+            "accartocciarsi",
+            "to crumple up",
+            "tiritera",
+            "refrain",
+            "bisboccia",
+            "revelry",
+            "grattacapo",
+            "headache",
+            "triccheballacche",
+            "rattle instruments",
+            "gorgheggiare",
+            "to warble",
+            "scarabocchio",
+            "scribble",
+            "tarantolato",
+            "possessed",
+            "buongiorno",
+            "good morning",
+            "grazie",
+            "thank you",
+            "per favore",
+            "please",
+            "Amore",
+            "love",
+            "Buonasera",
+            "good evening",
+            "Cibo",
+            "food",
+            "forse",
+            "maybe",
+            "Calore",
+            "warmth",
+            "quando",
+            "when",
+            "dove",
+            "where",
+            "come",
+            "how",
+            "Fiore",
+            "flower",
+            "cosa",
+            "what",
+            "mai",
+            "never",
+            "sempre",
+            "always",
+            "adesso",
+            "now",
+            "presto",
+            "soon",
+            "tardi",
+            "late",
+            "oggi",
+            "today",
+            "domani",
+            "tomorrow",
+            "ieri",
+            "yesterday",
+            "fame",
+            "hunger",
+            "sete",
+            "thirst",
+            "aiuto",
+            "help",
+            "attento",
+            "careful",
+            "soldi",
+            "money",
+            "macchina",
+            "car",
+            "Casa",
+            "home",
+            "Mare",
+            "sea",
+            "Sole",
+            "sun",
+        ];
+
+        function generateIndex(data) {
+            return Math.floor(Math.random() * data.length + 1);
+        }
+
+        function isEven(number) {
+            return number % 2 === 0;
+        }
+
+        function getRandomEnglishWord(data, oldIndex) {
+            let newIndex = generateIndex(data);
+
+            // make sure we don't fall on the same word
+            while (isEven(newIndex) && newIndex !== oldIndex) {
+                newIndex = generateIndex(data);
+            }
+
+            return data[newIndex];
+        }
+
+        function getMainPairOfWords(data) {
+            let index = generateIndex(data);
+
+            if (index % 2 !== 0) {
+                index = index - 1;
+            }
+
+            return {
+                ita: data[index].toLowerCase(),
+                eng: data[index + 1].toLowerCase(),
+                englishWordIndex: index,
+            };
+        }
+
+        function getOtherWordTranslations(data, index) {
+            return [
+                getRandomEnglishWord(data, index),
+                getRandomEnglishWord(data, index),
+                getRandomEnglishWord(data, index),
+            ];
+        }
+
+        const mainPair = getMainPairOfWords(data);
+        const otherPairs = getOtherWordTranslations(
+            data,
+            mainPair.englishWordIndex,
+        );
+    </script>
+</html>
