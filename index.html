@@ -15,12 +15,12 @@
       Mykola really wants that date
     </header>
 
-      <main class="flex flex-col gap-24 justify-center items-center">
+      <main x-data :class="$store" class="flex flex-col gap-24 justify-center items-center">
         <div
-          id="ita"
+          
+          x-text="ita"
           class="bg-emerald-600 rounded-xl px-14 py-8 text-xl font-semibold shadow-md"
         >
-          italian
         </div>
         <div id="options" class="flex flex-col gap-6">
           <div
@@ -277,9 +277,17 @@
         }
 
         const mainPair = getMainPairOfWords(data);
-        const otherPairs = getOtherWordTranslations(
+        const otherWords = getOtherWordTranslations(
             data,
             mainPair.englishWordIndex,
         );
+
+       document.addEventListener('alpine:init', () => {
+            Alpine.store('words', {
+                ita: mainPair.ita,
+                correctEng: mainPair.eng,
+                otherWords: otherWords,
+            })
+        })
     </script>
 </html>
