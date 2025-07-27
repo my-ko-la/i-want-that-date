@@ -235,20 +235,23 @@
         ];
 
         function generateIndex(data) {
-            return Math.floor(Math.random() * data.length + 1);
+            return Math.floor(Math.random() * data.length);
         }
 
         function isEven(number) {
             return number % 2 === 0;
         }
 
-        function getRandomEnglishWord(data, oldIndex) {
-            let newIndex = generateIndex(data);
+        function isNotEven(number) {
+          return !isEven(number);
+        }
 
-            // make sure we don't fall on the same word
-            while (isEven(newIndex) && newIndex !== oldIndex) {
-                newIndex = generateIndex(data);
-            }
+        function getRandomEnglishWord(data, oldIndex) {
+            let newIndex;
+
+            do {
+              newIndex = generateIndex(data);
+            } while(isEven(newIndex) && newIndex !== oldIndex)
 
             return data[newIndex];
         }
@@ -256,14 +259,14 @@
         function getMainPairOfWords(data) {
             let index = generateIndex(data);
 
-            if (index % 2 !== 0) {
-                index = index - 1;
+            if (isNotEven(index)) {
+                index--;
             }
 
             return {
                 ita: data[index].toLowerCase(),
                 eng: data[index + 1].toLowerCase(),
-                englishWordIndex: index,
+                englishWordIndex: index + 1,
             };
         }
 
@@ -281,18 +284,11 @@
             mainPair.englishWordIndex,
         );
 
-        const allWords = [mainPair.eng, ...otherWords].sort(() => Math.random() - 0.5)
-
-
-        function shuffle(array) {
-          return array.sort(() => Math.random() - 0.5);
-        }
-
         function buildShuffledOptions(correct, incorrects) {
-          return shuffle([
+          return [
             { word: correct, isCorrect: true },
             ...incorrects.map(w => ({ word: w, isCorrect: false }))
-          ]);
+          ].sort(() => Math.random() - 0.5);
         }
 
         const options = buildShuffledOptions(mainPair.eng, otherWords);
