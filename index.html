@@ -11,44 +11,29 @@
         ></script>
     </head>
     <body class="flex items-center justify-center min-h-screen w-full bg-amber-500">
-    <header class="fixed top-0 left-0 w-full bg-red-900 justify-center text-center text-white shadow z-50 px-4 py-2">
-      Mykola really wants that date
-    </header>
+        <header class="fixed top-0 left-0 w-full bg-red-900 justify-center text-center text-white shadow z-50 px-4 py-2">
+          Mykola really wants that date
+        </header>
+        <main x-data class="flex flex-col gap-24 justify-center items-center w-[300px]">
+          <div
+            x-text="$store.words.ita"
+            class="bg-emerald-600 rounded-xl px-4 py-6 text-xl font-semibold shadow-md text-center truncate w-[300px]"
+          ></div>
 
-      <main x-data :class="$store" class="flex flex-col gap-24 justify-center items-center">
-        <div
-          
-          x-text="ita"
-          class="bg-emerald-600 rounded-xl px-14 py-8 text-xl font-semibold shadow-md"
-        >
-        </div>
-        <div id="options" class="flex flex-col gap-6">
-          <div
-            id="eng_1"
-            class="bg-yellow-200 rounded-lg px-10 py-4 text-lg font-medium shadow hover:bg-yellow-300 transition"
-          >
-            english 1
+          <div id="options" class="flex flex-col gap-4 w-full">
+            <template x-for="(entry, index) in $store.words.options" :key="index">
+              <div
+                x-text="entry.word"
+                @click="$store.words.pick(entry)"
+                class="cursor-pointer bg-yellow-200 rounded-lg px-4 py-3 text-lg font-medium shadow hover:bg-yellow-300 transition text-center truncate"
+                :class="{
+                  'bg-green-300': $store.words.status === 'correct' && entry.isCorrect,
+                  'bg-red-300': $store.words.status === 'wrong' && entry.isCorrect === false
+                }"
+              ></div>
+            </template>
           </div>
-          <div
-            id="eng_2"
-            class="bg-yellow-200 rounded-lg px-10 py-4 text-lg font-medium shadow hover:bg-yellow-300 transition"
-          >
-            english 2
-          </div>
-          <div
-            id="eng_3"
-            class="bg-yellow-200 rounded-lg px-10 py-4 text-lg font-medium shadow hover:bg-yellow-300 transition"
-          >
-            english 3
-          </div>
-          <div
-            id="eng_4"
-            class="bg-yellow-200 rounded-lg px-10 py-4 text-lg font-medium shadow hover:bg-yellow-300 transition"
-          >
-            english 4
-          </div>
-        </div>
-      </main>
+        </main>
     </body>
 
     <script>
@@ -282,12 +267,38 @@
             mainPair.englishWordIndex,
         );
 
+      const allWords = [mainPair.eng, ...otherWords].sort(() => Math.random() - 0.5)
+
+
+        function shuffle(array) {
+          return array.sort(() => Math.random() - 0.5);
+        }
+
+        function buildShuffledOptions(correct, incorrects) {
+          return shuffle([
+            { word: correct, isCorrect: true },
+            ...incorrects.map(w => ({ word: w, isCorrect: false }))
+          ]);
+        }
+
+        const options = buildShuffledOptions(mainPair.eng, otherWords);
+
        document.addEventListener('alpine:init', () => {
-            Alpine.store('words', {
-                ita: mainPair.ita,
-                correctEng: mainPair.eng,
-                otherWords: otherWords,
-            })
+        Alpine.store('words', {
+          ita: mainPair.ita,
+          options,
+          status: null,
+          pick(word) {
+            this.status = word.isCorrect ? 'correct' : 'wrong';
+            setTimeout(() => {
+              const newMain = getMainPairOfWords(data);
+              const newOthers = getOtherWordTranslations(data, newMain.englishWordIndex);
+              this.ita = newMain.ita;
+              this.options = buildShuffledOptions(newMain.eng, newOthers);
+              this.status = null;
+            }, 1000);
+          }
+        });
         })
     </script>
 </html>
