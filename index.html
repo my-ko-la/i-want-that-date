@@ -25,10 +25,11 @@
               <div
                 x-text="entry.word"
                 @click="$store.words.pick(entry)"
-                class="cursor-pointer bg-yellow-200 rounded-lg px-4 py-3 text-lg font-medium shadow hover:bg-yellow-300 transition text-center truncate"
+                class="cursor-pointer rounded-lg px-4 py-3 text-lg font-medium shadow transition text-center truncate"
                 :class="{
-                  'bg-green-300': $store.words.status === 'correct' && entry.isCorrect,
-                  'bg-red-300': $store.words.status === 'wrong' && entry.isCorrect === false
+                  'bg-green-300': $store.words.selected && $store.words.selected.word === entry.word && entry.isCorrect,
+                  'bg-red-300': $store.words.selected && $store.words.selected.word === entry.word && !entry.isCorrect,
+                  'bg-yellow-200 hover:bg-yellow-300': !$store.words.selected
                 }"
               ></div>
             </template>
@@ -267,7 +268,7 @@
             mainPair.englishWordIndex,
         );
 
-      const allWords = [mainPair.eng, ...otherWords].sort(() => Math.random() - 0.5)
+        const allWords = [mainPair.eng, ...otherWords].sort(() => Math.random() - 0.5)
 
 
         function shuffle(array) {
@@ -284,21 +285,25 @@
         const options = buildShuffledOptions(mainPair.eng, otherWords);
 
        document.addEventListener('alpine:init', () => {
-        Alpine.store('words', {
-          ita: mainPair.ita,
-          options,
-          status: null,
-          pick(word) {
-            this.status = word.isCorrect ? 'correct' : 'wrong';
-            setTimeout(() => {
-              const newMain = getMainPairOfWords(data);
-              const newOthers = getOtherWordTranslations(data, newMain.englishWordIndex);
-              this.ita = newMain.ita;
-              this.options = buildShuffledOptions(newMain.eng, newOthers);
-              this.status = null;
-            }, 1000);
-          }
-        });
+            Alpine.store('words', {
+              ita: mainPair.ita,
+              options,
+              selected: null,
+
+              pick(word) {
+
+                this.selected = word;
+
+                setTimeout(() => {
+                  const newMain = getMainPairOfWords(data);
+                  const newOthers = getOtherWordTranslations(data, newMain.englishWordIndex);
+
+                  this.ita = newMain.ita;
+                  this.options = buildShuffledOptions(newMain.eng, newOthers);
+                  this.selected = null;
+                }, 1000);
+              }
+            });
         })
     </script>
 </html>
